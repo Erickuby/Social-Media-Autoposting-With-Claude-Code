@@ -125,6 +125,15 @@ python -m clip_extractor batch --video source.mp4 --clips defs.json --output cli
 - **Create task:** `POST /jobs/createTask`
 - **Poll status:** `GET /jobs/recordInfo?taskId={id}`
 
+### ElevenLabs (Voiceover for Remotion videos)
+- **Base URL:** `https://api.elevenlabs.io/v1`
+- **API Key:** `$ELEVENLABS_API_KEY` (from .env)
+- **Voice ID:** `$ELEVENLABS_VOICE_ID` (from .env) — Eric's cloned voice
+- **Generate audio:** `POST /text-to-speech/{voice_id}`
+- **Recommended model:** `eleven_multilingual_v2`
+- **Output format:** `mp3_44100_128` — save to `output/audio/` before passing to Remotion
+- **Usage:** Whenever a Remotion composition needs voiceover, generate the audio via ElevenLabs first, then reference the file in the composition using `staticFile()`
+
 ## Brand Assets
 
 ### Platform Logos (`public/logos/`)
