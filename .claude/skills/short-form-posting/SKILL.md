@@ -53,21 +53,19 @@ This transcript drives ALL content creation. Do not write generic descriptions.
 
 ## Step 2: Confirm Profile
 
-Ask the user which profile to use. Reference the `late-social-media` skill for current account IDs.
+Ask the user which profile/platform to post to. Use the correct API key per profile.
 
-**Enrique Marq accounts:**
+**Eric Nwankwo accounts** — API key: `ZERNIO_API_KEY_ERIC`
 | Platform | Username | Account ID |
 |----------|----------|------------|
-| YouTube | enriquemarq-0 | `6978050f77637c5c857c82e9` |
-| Instagram | kikefuturo_ | `697bb56593a320156c4221b8` |
-| TikTok | kikemarqx | `697bb57b93a320156c4221b9` |
+| YouTube | @ericexplainsai | `69c75bf86cb7b8cf4ca792a3` |
+| Facebook | AI Vision Consulting (page) | `69c75bec6cb7b8cf4ca79296` |
 
-**Trejon Edmonds accounts:**
+**AI Vision Consulting accounts** — API key: `ZERNIO_API_KEY_AIVISION`
 | Platform | Username | Account ID |
 |----------|----------|------------|
-| YouTube | trejonedmonds | `697bd98d93a320156c4224e9` |
-| Instagram | trejonedmonds | `697bda2d93a320156c4224f4` |
-| TikTok | trejon_edmonds | `697bda2093a320156c4224f3` |
+| Instagram | @aivisionconsulting | `69c75c896cb7b8cf4ca793bd` |
+| TikTok | @aivisionconsultingltd | `69c75c7e6cb7b8cf4ca793a8` |
 
 **Always verify with `mcp__late__accounts_list` before posting.**
 
@@ -413,30 +411,11 @@ video_cover_timestamp_ms: 3000
 
 ---
 
-## Social Links (Enrique)
+## Social Links (Eric Nwankwo / AI Vision Consulting)
 
 ```
-YouTube: https://www.youtube.com/@enriquemarq-0
-LinkedIn: https://www.linkedin.com/in/enrique-marq-756191319/
-Instagram: https://www.instagram.com/kikefuturo_/
-TikTok: https://www.tiktok.com/@kikemarqx
+YouTube: https://www.youtube.com/@ericexplainsai
+Instagram: https://www.instagram.com/aivisionconsulting
+TikTok: https://www.tiktok.com/@aivisionconsultingltd
+Facebook: https://facebook.com/1039260889266180
 ```
-
-## Social Links (Trejon)
-
-```
-YouTube: https://www.youtube.com/@trejonedmonds
-LinkedIn: https://www.linkedin.com/in/trejon-edmonds-63a201289/
-Instagram: https://www.instagram.com/trejonedmonds
-TikTok: https://www.tiktok.com/@trejon_edmonds
-Twitter/X: https://x.com/Trejon_
-```
-
-## Lead Magnet (current)
-```
-https://infinitxai.com/free/dfy-campaign-builder
-```
-
-## Branding
-- **Enrique brand color:** Orange `#F97316`
-- **IX System:** Mint green `#4ADE80` on black `#000000`

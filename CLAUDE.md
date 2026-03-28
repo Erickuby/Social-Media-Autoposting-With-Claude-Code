@@ -32,7 +32,7 @@ The complete AI-powered content creation and distribution system. Create, edit, 
 4. **Confirm titles** before posting to YouTube.
 5. **Use the Late REST API** (curl) for posts that need platform-specific features.
 6. **Use Late MCP tools** for simple single-platform posts.
-7. **Voice DNA is mandatory.** Before writing ANY social media post, caption, description, script, or written content, load the `voice-dna` skill. All written output must match Enrique's voice — educator-who-corrects-the-room, not a marketing agency. See `.claude/skills/voice-dna/SKILL.md` for the full profile.
+7. **Voice DNA is mandatory.** Before writing ANY social media post, caption, description, script, or written content, load the `voice-dna` skill. All written output must match Eric's voice — direct, warm, practical, British English, never corporate or salesy. See `.claude/skills/voice-dna/SKILL.md` for the full profile.
 
 ## Session Commands
 
@@ -170,13 +170,14 @@ output/
 
 ## Tone
 
-**All written content follows Enrique's Voice DNA** (`.claude/skills/voice-dna/SKILL.md`).
+**All written content follows Eric's Voice DNA** (`.claude/skills/voice-dna/SKILL.md`).
 
 Quick rules:
-- Educator-who-corrects-the-room. Not storyteller. Not guru.
-- Conversational and direct. Short sentences. Simple words.
-- Open with bold claims or results, never "Hey guys!" or rhetorical questions.
-- No banned words: leverage, optimize, synergy, game-changing, utilize, empower, crucial.
+- Direct, warm, practical. Knowledgeable friend, not corporate trainer.
+- British English always. No American spellings. No em dashes. No dollar signs.
+- Open with bold claims or results, never "welcome back" or "in today's video."
+- No banned words: leverage, synergy, game-changer, passionate, empower, deep dive.
+- Guardrail included for any application or CV-related content.
 - CTA is brief, at the end, not pushy.
 
 ## Session Tracking
@@ -191,3 +192,27 @@ sessions/
 ```
 
 `/continue` reads the latest session log to pick up where the last session left off.
+
+---
+
+# Session Management System
+
+## Command: /done
+When I type `/done`, you must perform a "Session Wrap-up" by executing these steps:
+1. **Summarize Progress:** Create a summary of all tasks completed in this session.
+2. **Track In-Progress Work:** List any tasks that were started but not finished.
+3. **Log System Status:** Note current environment readiness (e.g., are API keys for Zernio/KIE.ai working? Are dependencies installed?).
+4. **Document to File:** Save this summary into a new file: `sessions/session-[YYYY-MM-DD]-[HHmm].md`.
+5. **Update Carryover:** Update the `current_state.json` file in the root with the "Next Steps" so they are ready for the next session.
+6. **Final Response:** Confirm the session is documented and provide a one-sentence preview of what we do next.
+
+## Command: /continue
+When I type `/continue`, you must "Reboot Memory" by executing these steps:
+1. **Read Latest Session:** Locate the most recent file in the `sessions/` folder.
+2. **Read Current State:** Read `current_state.json` to understand pending tasks.
+3. **Verify Environment:** Silently check if `node`, `python`, and `ffmpeg` are still responsive.
+4. **Load Context:** Internalize the goals from the previous session.
+5. **Status Report:** Respond with:
+   - A checkmark list of current system readiness.
+   - A summary of where we left off.
+   - A question asking if I'd like to proceed with the next pending task.

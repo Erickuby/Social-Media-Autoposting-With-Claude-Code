@@ -14,16 +14,26 @@ Post and schedule content to social media platforms using Late API and MCP tools
 
 ## Configuration
 
-### API Key
-```
-sk_7e0b73779f132c45094e7c87841bf8582ad3fd0b6204c92b977ffc6303a7d724
-```
+### API Keys (two Zernio workspaces)
+
+| Profile | API Key | Platforms |
+|---------|---------|-----------|
+| Eric Nwankwo | `$ZERNIO_API_KEY_ERIC` (from .env) | Facebook, YouTube |
+| AI Vision Consulting | `$ZERNIO_API_KEY_AIVISION` (from .env) | Instagram, TikTok |
 
 ### Connected Accounts
+
+**Eric Nwankwo profile** — use `ZERNIO_API_KEY_ERIC`
 | Platform | Username | Account ID |
 |----------|----------|------------|
-| YouTube | enriquemarq-0 | 6978050f77637c5c857c82e9 |
-| LinkedIn | Enrique Marq | 6978052b77637c5c857c82ea |
+| YouTube | @ericexplainsai | `69c75bf86cb7b8cf4ca792a3` |
+| Facebook | AI Vision Consulting (page) | `69c75bec6cb7b8cf4ca79296` |
+
+**AI Vision Consulting profile** — use `ZERNIO_API_KEY_AIVISION`
+| Platform | Username | Account ID |
+|----------|----------|------------|
+| Instagram | @aivisionconsulting | `69c75c896cb7b8cf4ca793bd` |
+| TikTok | @aivisionconsultingltd | `69c75c7e6cb7b8cf4ca793a8` |
 
 ---
 
@@ -69,14 +79,14 @@ Use AskUserQuestion tool to confirm before posting.
 
 ```bash
 curl -s -X POST "https://getlate.dev/api/v1/posts" \
-  -H "Authorization: Bearer sk_7e0b73779f132c45094e7c87841bf8582ad3fd0b6204c92b977ffc6303a7d724" \
+  -H "Authorization: Bearer $ZERNIO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "content": "[DESCRIPTION]",
     "mediaItems": [{"url": "[VIDEO_URL]", "type": "video"}],
     "platforms": [{
       "platform": "youtube",
-      "accountId": "6978050f77637c5c857c82e9",
+      "accountId": "69c75bf86cb7b8cf4ca792a3",
       "platformSpecificData": {
         "title": "[VIDEO_TITLE]",
         "visibility": "public",
@@ -92,13 +102,13 @@ curl -s -X POST "https://getlate.dev/api/v1/posts" \
 
 ```bash
 curl -s -X POST "https://getlate.dev/api/v1/posts" \
-  -H "Authorization: Bearer sk_7e0b73779f132c45094e7c87841bf8582ad3fd0b6204c92b977ffc6303a7d724" \
+  -H "Authorization: Bearer $ZERNIO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "content": "[POST_CONTENT]",
     "platforms": [{
       "platform": "linkedin",
-      "accountId": "6978052b77637c5c857c82ea"
+      "accountId": "69c75c896cb7b8cf4ca793bd"
     }],
     "publishNow": true
   }'
@@ -142,7 +152,7 @@ Use the URL directly in `media_urls` or `mediaItems`.
 1. Get presigned URL:
 ```bash
 curl -s -X POST "https://getlate.dev/api/v1/media/presign" \
-  -H "Authorization: Bearer sk_7e0b73779f132c45094e7c87841bf8582ad3fd0b6204c92b977ffc6303a7d724" \
+  -H "Authorization: Bearer $ZERNIO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"filename": "file.mp4", "contentType": "video/mp4"}'
 ```
@@ -174,7 +184,7 @@ Use `threadItems` in `platformSpecificData`. The top-level `content` field is al
 
 ```bash
 curl -s -X POST "https://getlate.dev/api/v1/posts" \
-  -H "Authorization: Bearer sk_7e0b73779f132c45094e7c87841bf8582ad3fd0b6204c92b977ffc6303a7d724" \
+  -H "Authorization: Bearer $ZERNIO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "content": "FIRST_TWEET_TEXT",
@@ -198,7 +208,7 @@ Same `threadItems` pattern. Top-level `content` required.
 
 ```bash
 curl -s -X POST "https://getlate.dev/api/v1/posts" \
-  -H "Authorization: Bearer sk_7e0b73779f132c45094e7c87841bf8582ad3fd0b6204c92b977ffc6303a7d724" \
+  -H "Authorization: Bearer $ZERNIO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "content": "FIRST_POST_TEXT",
@@ -225,13 +235,13 @@ Post same content to multiple platforms:
 
 ```bash
 curl -s -X POST "https://getlate.dev/api/v1/posts" \
-  -H "Authorization: Bearer sk_7e0b73779f132c45094e7c87841bf8582ad3fd0b6204c92b977ffc6303a7d724" \
+  -H "Authorization: Bearer $ZERNIO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "content": "[POST_CONTENT]",
     "platforms": [
-      {"platform": "linkedin", "accountId": "6978052b77637c5c857c82ea"},
-      {"platform": "youtube", "accountId": "6978050f77637c5c857c82e9", "platformSpecificData": {"title": "[TITLE]"}}
+      {"platform": "linkedin", "accountId": "69c75c896cb7b8cf4ca793bd"},
+      {"platform": "youtube", "accountId": "69c75bf86cb7b8cf4ca792a3", "platformSpecificData": {"title": "[TITLE]"}}
     ],
     "publishNow": true
   }'
