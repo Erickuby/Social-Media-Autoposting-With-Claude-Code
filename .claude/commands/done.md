@@ -1,326 +1,146 @@
 ---
 name: done
-description: "Session completion — validate system, sync documents, report what was done, commit and push. Use when finished with a session or saying 'done', 'wrap up', 'commit this', 'push it', 'let's ship it'."
+description: "Session Wrap-up — summarise progress, log system status, write session file, update current_state.json. Use when finished with a session or saying 'done', 'wrap up', 'close out', 'save everything'."
 ---
 
-# /done — Session Completion & Sync
+# /done — Session Wrap-up
 
-**Validate, sync, report, commit. One command to close out a session cleanly.**
-
-Adapted from IX Content Factory /done v3.0 for the Social Media Manager pipeline.
-
----
-
-## Core Principle
-
-**Document-driven and portable.** Reads CLAUDE.md to understand conventions, validates the system, syncs docs, generates a report, and commits. No hardcoded specifics.
+Execute these steps in order. Do not skip any.
 
 ---
 
-## 7-Phase Flow
+## Step 1: Summarise Progress
 
-```
-DISCOVER → VALIDATE → SYNC → REPORT → SESSION LOG → COMMIT → REFLECT
-   (1)        (2)       (3)     (4)        (4.5)       (5)      (6)
-```
+Review everything that happened in this conversation and produce a clear list of:
+- Tasks completed in full
+- Tasks started but not finished
+- Any errors or blockers encountered
 
 ---
 
-## Phase 1: Discovery — What Changed This Session
+## Step 2: Track In-Progress Work
 
-### Step 1.1: Scan Changes
+List any tasks that were started but not finished, with enough context that the next session can pick them up without re-explaining.
+
+---
+
+## Step 3: Log System Status
+
+Run these checks silently and note the results:
 
 ```bash
-# What files changed?
-git diff --name-only HEAD 2>/dev/null
-git diff --cached --name-only 2>/dev/null
-git status --short 2>/dev/null
-
-# Recent commits this session
-git log --oneline -10 2>/dev/null
-```
-
-### Step 1.2: Classify Session Type
-
-Based on changes, classify as one of:
-- **Content Pipeline**: Clips extracted, videos edited, content posted
-- **Feature Work**: New skills, components, or tools added
-- **Bug Fix**: Fixes to existing pipeline or tools
-- **Setup/Config**: Dependencies, API keys, environment changes
-- **Documentation**: README, CLAUDE.md, skill docs updated
-
-### Step 1.3: Check Output Directory
-
-```bash
-# What content was produced this session?
-ls -lt output/clips/ 2>/dev/null | head -5
-ls -lt output/thumbnails/ 2>/dev/null | head -5
-ls -lt output/carousels/ 2>/dev/null | head -5
-ls -lt output/documents/ 2>/dev/null | head -5
-ls -lt output/posts/ 2>/dev/null | head -5
-```
-
----
-
-## Phase 2: Validate — System Readiness Check
-
-### Step 2.1: Dependencies
-
-```bash
-# Node + npm packages
+# Node.js
 node --version
+
+# npm packages
 test -d node_modules && echo "INSTALLED" || echo "MISSING"
 
-# Python + clip extractor
-py --version 2>/dev/null || python --version 2>/dev/null || python3 --version 2>/dev/null
-py -3 -c "import mediapipe, cv2, numpy, filterpy, rapidfuzz; print('ALL OK')" 2>/dev/null || echo "CLIP EXTRACTOR DEPS INCOMPLETE"
+# Python
+python --version 2>/dev/null || py --version 2>/dev/null
+
+# Clip extractor dependencies
+python -c "import mediapipe, cv2, numpy, filterpy, rapidfuzz; print('ALL OK')" 2>/dev/null || echo "INCOMPLETE"
 
 # FFmpeg
 ffmpeg -version 2>/dev/null | head -1 || echo "MISSING"
-```
 
-### Step 2.2: API Keys
-
-```bash
-# Verify keys are set (NEVER display values)
-grep -q "ZERNIO_API_KEY=." .env 2>/dev/null && echo "ZERNIO: SET" || echo "ZERNIO: MISSING"
+# API keys (check presence only — never display values)
+grep -q "ZERNIO_API_KEY_ERIC=." .env 2>/dev/null && echo "ZERNIO ERIC: SET" || echo "ZERNIO ERIC: MISSING"
+grep -q "ZERNIO_API_KEY_AIVISION=." .env 2>/dev/null && echo "ZERNIO AIVISION: SET" || echo "ZERNIO AIVISION: MISSING"
 grep -q "KIE_API_KEY=." .env 2>/dev/null && echo "KIE: SET" || echo "KIE: MISSING"
-grep -q "ZERNIO_PROFILE_ID=." .env 2>/dev/null && echo "PROFILE ID: SET" || echo "PROFILE ID: MISSING"
+grep -q "ELEVENLABS_API_KEY=." .env 2>/dev/null && echo "ELEVENLABS: SET" || echo "ELEVENLABS: MISSING"
 ```
-
-### Step 2.3: Remotion Check
-
-```bash
-# Can Remotion list compositions?
-npx remotion compositions 2>/dev/null | head -5 || echo "REMOTION NOT READY"
-```
-
-### Step 2.4: Build Check
-
-```bash
-# TypeScript / build validation
-npx tsc --noEmit 2>/dev/null && echo "BUILD: PASS" || echo "BUILD: ISSUES"
-```
-
-**IF ANY CRITICAL GATE FAILS:** Flag the issue. Don't block the commit for non-critical warnings, but report them.
 
 ---
 
-## Phase 3: Sync — Update Documentation
+## Step 4: Write Session Log File
 
-### Step 3.1: CLAUDE.md Sync
+Save a new file at: `sessions/session-[YYYY-MM-DD]-[HHmm].md`
 
-Check if any of these changed and need CLAUDE.md updates:
-- **package.json** changed → update tech stack if new dependencies added
-- **New skills added** → update Skills table
-- **New components** → update Remotion Components table
-- **New audio/assets** → update Brand Assets section
-- **Pipeline changes** → update Pipeline Flow
+Use today's date and current time (24-hour format). Example: `sessions/session-2026-03-28-1430.md`
 
-### Step 3.2: README.md Sync
-
-Check if setup instructions need updates:
-- **requirements.txt** changed → update install instructions
-- **New API keys needed** → update API keys section
-- **New system requirements** → update Requirements section
-
-### Step 3.3: Skill Docs Sync
-
-For any skills modified this session:
-- Verify the SKILL.md description matches current behavior
-- Verify trigger words are accurate
-
-### Step 3.4: Output Organization Audit
-
-Verify all produced content follows the convention:
-```
-output/
-  clips/YYYY-MM-DD-slug/          # Extracted/reframed clips + clips-metadata.json
-  thumbnails/YYYY-MM-DD-slug/     # YouTube thumbnails
-  carousels/YYYY-MM-DD-slug/      # AI image carousels
-  documents/YYYY-MM-DD-slug/      # Document carousels (HTML > PDF > PNG)
-  posts/YYYY-MM-DD-slug/          # Mixed-format posts
-```
-
-**IF content is in wrong location:** Move it to the correct `output/` subdirectory before committing.
-
----
-
-## Phase 4: Report — Session Summary
-
-Generate a summary for the user:
+Use this exact template:
 
 ```markdown
-## Session Complete
+# Session: [Short Title — 3-5 words describing what was done]
 
-**Date:** [Current date]
-**Type:** [Session type from Phase 1]
+**Date:** YYYY-MM-DD
+**Time:** HH:mm
+**Type:** [Setup / Content / Feature / Bug Fix / Documentation]
 
----
+## Completed
+- [Task 1]
+- [Task 2]
 
-### What Was Done
-- [List of main accomplishments]
+## In Progress
+- [Task started but not finished — include enough context to resume]
 
-### System Status
+## System Status
 | Component | Status |
 |-----------|--------|
 | Node.js | [version] |
-| npm packages | [OK/Issues] |
+| npm packages | [Installed / MISSING] |
 | Python | [version] |
-| Clip Extractor | [OK/Issues] |
-| FFmpeg | [OK/Issues] |
-| Zernio API | [Set/Missing] |
-| KIE API | [Set/Missing] |
-| Build | [Pass/Issues] |
-
-### Content Produced
-- Clips: [count and location]
-- Thumbnails: [count and location]
-- Carousels: [count and location]
-- Posts: [count and location]
-
-### Documents Updated
-- [List of docs that were synced]
-
-### Issues Found
-- [Any warnings or problems detected]
-
-### What's Next
-- [Suggested next actions based on current state]
-```
-
----
-
-## Phase 4.5: Write Session Log
-
-**Every session gets a log file.** This is how `/continue` picks up context in the next session.
-
-### File Location
-
-`sessions/YYYY-MM-DD-slug.md`
-
-- Date: today's date
-- Slug: 2-4 word kebab-case summary of main work done
-- If multiple sessions on the same day, append a number: `-2`, `-3`
-
-### Template
-
-Write this file using the Write tool:
-
-```markdown
-# Session: [Short Title]
-
-**Date:** YYYY-MM-DD
-**Type:** [Content Pipeline / Feature Work / Bug Fix / Setup / Documentation]
-
-## What Was Done
-- [Accomplishment 1]
-- [Accomplishment 2]
-- [Accomplishment 3]
+| Clip Extractor | [OK / INCOMPLETE] |
+| FFmpeg | [version] |
+| Zernio (Eric) | [Set / MISSING] |
+| Zernio (AI Vision) | [Set / MISSING] |
+| KIE.ai | [Set / MISSING] |
+| ElevenLabs | [Set / MISSING] |
 
 ## Content Produced
-- [List any clips, thumbnails, carousels, posts with their output/ paths]
+- [List any clips, thumbnails, carousels, posts — or "None this session"]
 
-## Issues Found & Fixed
-- [Problem]: [How it was fixed]
-
-## Documents Updated
-- [List files that were modified]
+## Issues Found
+- [Any problems encountered — or "None"]
 
 ## What's Next
-- [Suggested next actions for the following session]
-
-## Commit
-- [commit hash] — [commit message summary]
-```
-
-### Rules
-- Always write the session log BEFORE committing (so it's included in the commit)
-- Keep it concise — facts only, no fluff
-- If nothing notable happened, still log it: "Exploratory session, no changes committed"
-
----
-
-## Phase 5: Commit & Push
-
-### Step 5.1: Stage Changes
-
-Stage specific files (never blindly `git add -A`):
-- Changed source files
-- Updated documentation
-- New skills/commands
-- **EXCLUDE:** `.env`, `node_modules/`, any secrets
-
-### Step 5.2: Commit
-
-```bash
-git commit -m "$(cat <<'EOF'
-[type]: [Brief description]
-
-- [Change 1]
-- [Change 2]
-- System validated: all checks passing
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-EOF
-)"
-```
-
-Commit types: `feat`, `fix`, `docs`, `chore`, `refactor`, `pipeline`
-
-### Step 5.3: Push
-
-```bash
-git push origin main
-```
-
-**IMPORTANT:** Always confirm with the user before pushing. Show them the commit message and changed files first.
-
----
-
-## Phase 6: Reflect — Learnings
-
-### Step 6.1: Session Learnings
-
-Note any:
-- Bugs discovered and fixed (especially non-obvious root causes)
-- Pipeline improvements made
-- New patterns established
-- Things that should be documented for future sessions
-
-### Step 6.2: Evolution Check
-
-- Any repeated manual steps that should become a skill?
-- Any documentation gaps discovered?
-- Any dependency issues that should be noted in README?
-
-### Step 6.3: Final Output
-
-```markdown
-**Session closed.**
-**Commit:** [hash] — [message]
-**Push:** [success/failed]
-
-Ready for next session? Use `/continue` to pick up where you left off.
+- [Specific next actions for the following session]
 ```
 
 ---
 
-## Auto-Trigger Patterns
+## Step 5: Update current_state.json
 
-- "done", "/done", "finished", "wrap up"
-- "commit this", "push it", "let's ship it"
-- "save everything", "close out"
+Update the file `current_state.json` in the project root with this structure:
+
+```json
+{
+  "last_session": "sessions/session-[YYYY-MM-DD]-[HHmm].md",
+  "pending_tasks": [
+    "[Task 1 carried over]",
+    "[Task 2 carried over]"
+  ],
+  "system_status": "ready"
+}
+```
+
+If there are no pending tasks, set `"pending_tasks": []`.
 
 ---
 
-## Output Organization Rules (CRITICAL)
+## Step 6: Final Response
 
-Same as `/continue` — all content goes in `output/` following the date-slug convention.
-Never save to Downloads, temp, or external locations.
+Reply to the user with:
+
+1. Confirmation that the session log has been written (include the filename)
+2. Confirmation that `current_state.json` has been updated
+3. A one-sentence preview of what to do next session
+
+Format:
+
+```
+Session documented: sessions/session-[YYYY-MM-DD]-[HHmm].md
+current_state.json updated with [N] pending task(s).
+
+Next session: [One sentence describing the top priority task].
+```
 
 ---
 
-**Version:** 1.0
-**Adapted from:** IX Content Factory /done v3.0
-**Note:** This skill dynamically reads current project state — no hardcoded plan names or versions.
+## Rules
+
+- Never display actual API key values — check presence only
+- Always write the session file before responding
+- If nothing happened this session, still log it: "Exploratory session — no changes made"
+- Do not push to GitHub automatically — ask the user first
