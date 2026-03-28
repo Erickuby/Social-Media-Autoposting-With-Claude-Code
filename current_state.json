@@ -1,5 +1,9 @@
 {
-  "last_session": "",
-  "pending_tasks": [],
-  "system_status": "initialized"
+  "last_session": "sessions/session-2026-03-28-0530.md",
+  "pending_tasks": [
+    "Regenerate Zernio API keys for both profiles (precautionary — brief exposure during setup)",
+    "Test a real post end-to-end via Zernio (e.g. text post to Instagram or TikTok)",
+    "Test ElevenLabs voice generation with a short script"
+  ],
+  "system_status": "ready"
 }
