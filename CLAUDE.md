@@ -136,6 +136,11 @@ python -m clip_extractor batch --video source.mp4 --clips defs.json --output cli
 
 ## Brand Assets
 
+### AI Vision Consulting Logo
+- **File:** `public/ai-vision-logo.png`
+- **Usage:** `<Img src={staticFile('ai-vision-logo.png')} />`
+- **RULE:** Every Remotion video must end with a 2-3 second logo CTA outro. Logo springs in, website URL fades in beneath it. See `.claude/skills/video-editing/SKILL.md` — "Logo CTA Outro" section for the full implementation.
+
 ### Platform Logos (`public/logos/`)
 x.svg, instagram.svg, linkedin.svg, tiktok.svg, youtube.svg, facebook.svg, threads.svg, bluesky.svg, pinterest.svg, reddit.svg, snapchat.svg, telegram.svg, googlebusiness.svg
 

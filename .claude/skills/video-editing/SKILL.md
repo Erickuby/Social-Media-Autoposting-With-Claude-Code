@@ -146,13 +146,76 @@ boxShadow: 0 20px 70px rgba(0,0,0,0.5-0.6), inset 0 1px 0 rgba(255,255,255,0.15-
 
 | Asset | File |
 |-------|------|
+| **AI Vision Consulting logo** | **`ai-vision-logo.png` (root `public/`)** |
 | Claude Code | `claude-code-terminal.webp` (dark terminal, ASCII block font) |
 | Claude AI | `claude-ai-icon.svg` (starburst), `claude-ai-wordmark.png` |
-| INFINITX | `infinitx-logo.png` (root public/) |
 | GitHub | `github-mark.svg` |
 | 13 Platform SVGs | `x.svg`, `instagram.svg`, `linkedin.svg`, `tiktok.svg`, `bluesky.svg`, `facebook.svg`, `youtube.svg`, `pinterest.svg`, `threads.svg`, `googlebusiness.svg`, `telegram.svg`, `snapchat.svg`, `reddit.svg` |
 
 **RULE:** ALWAYS use real images (`Img` + `staticFile()`) for brand logos. NEVER recreate logos as SVG.
+
+---
+
+### Logo CTA Outro (MANDATORY — Every Video)
+
+**Every Remotion video must end with a 2-3 second logo CTA scene** featuring the AI Vision Consulting logo.
+
+**Reference the logo:**
+```tsx
+import { Img, staticFile } from 'remotion';
+
+<Img src={staticFile('ai-vision-logo.png')} style={{ width: 220 }} />
+```
+
+**Standard outro structure (last 60-90 frames at 30fps):**
+```tsx
+// Fade in logo + CTA text over dark or blurred background
+// Logo centred, CTA text below
+// Spring entrance on logo, fade in on text
+
+const outroStart = durationInFrames - 75; // starts 2.5s before end
+
+<Sequence from={outroStart} durationInFrames={75}>
+  <AbsoluteFill style={{
+    background: 'rgba(0,0,0,0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    gap: 24,
+  }}>
+    <Img
+      src={staticFile('ai-vision-logo.png')}
+      style={{
+        width: 220,
+        opacity: interpolate(frame - outroStart, [0, 15], [0, 1], { extrapolateRight: 'clamp' }),
+        transform: `scale(${spring({ frame: frame - outroStart, fps: 30,
+          config: { damping: 14, stiffness: 120 } })})`,
+      }}
+    />
+    <div style={{
+      color: '#ffffff',
+      fontSize: 28,
+      fontWeight: 600,
+      opacity: interpolate(frame - outroStart, [15, 30], [0, 1], { extrapolateRight: 'clamp' }),
+    }}>
+      aivisionconsulting.co.uk
+    </div>
+  </AbsoluteFill>
+</Sequence>
+```
+
+**CTA text options (pick one per video):**
+- `aivisionconsulting.co.uk`
+- `Follow for more AI tips`
+- `Link in bio`
+- `Subscribe — Eric Explains AI`
+
+**Rules:**
+- Logo outro is non-negotiable — every video, every format (short-form and long-form)
+- Duration: 60-90 frames (2-3 seconds)
+- Background: dark overlay (`rgba(0,0,0,0.85)`) or solid black — never transparent
+- Logo scales in with spring animation, CTA text fades in 15 frames after logo
+- Place as the very last `<Sequence>` in every composition
 
 ---
 
@@ -180,7 +243,7 @@ boxShadow: 0 20px 70px rgba(0,0,0,0.5-0.6), inset 0 1px 0 rgba(255,255,255,0.15-
 7. **SFX density per format.** Short-form: 5-20. Long-form: 35-40 with variety per type. Never per-word.
 8. **Full-screen overlays need opaque backgrounds.** Transparent overlays won't cover captions beneath.
 9. **Intro overlay vs separate scene — always clarify.** "On top of me speaking" = overlay. "White screen first" = separate scene.
-10. **Every video needs an outro CTA.** Logo + CTA text in final 2-3 seconds.
+10. **Every video needs an outro CTA.** AI Vision Consulting logo (`staticFile('ai-vision-logo.png')`) + CTA text in final 2-3 seconds. See "Logo CTA Outro" section above for the exact implementation.
 11. **Pipeline clips: video `volume={1}`.** For pipeline clips (extracted from long-form), the speaker's voice is baked into the video file. Use `volume={1}` on OffthreadVideo, not `volume={0}`.
 12. **Word data MUST be transcribed from the actual video.** Transcribe from the video being rendered, not derived from a parent/master transcript. Extraction padding causes timestamp drift.
 13. **Caption positioning must be verified visually.** Take a screenshot of the video to determine layout type (talking-head vs split-screen) before setting the caption bottom position.
